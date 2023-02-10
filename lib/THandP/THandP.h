@@ -22,7 +22,7 @@ static const float C2K                  =    273.15;                            
 static const float B2PA                 = 100000.0;                              // Pascals for a Bar
 static const float PSI2PA               =   6894.75729;                          // Pascals for PSI
 
-float get_air_density(    float,                  float);
+float get_air_density(float P_Pa, float T_K            );
 float calcHeatIndex(      float,                  float);
 float calcRoA(       float P_Pa, float T_K             );   // kg/m^3 Air   Density Ideal Gas
 float calcRoS(       float P_Pa, float T_K             );   // kg/m^3 Steam Density Ideal Gas

@@ -6,7 +6,7 @@
 
 
 #ifdef I2C
-#define SHT3X
+#define SHT3X  
 //#define BMP
 #endif //I2C
 

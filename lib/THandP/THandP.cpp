@@ -4,31 +4,9 @@
 #include <THandP.h>
 
 
-float get_air_density(float P_amb_Pa, float T_amb_K) {
-  float rho      = P_amb_Pa/(RAir_J_kg_K*T_amb_K);
+float get_air_density(float P_Pa, float T_K) {
+  float rho      = P_Pa/(RAir_J_kg_K*T_K);
   return(rho);
-}
-
-
-float calcDewPoint(float t_c,float rh_pc) {                                  
-  // °C Dew Point Temperature estimation based on Buck equation https://www.yaga.no/Dewpoint%20Equations.pdf
-  float alph = ((18.678-t_c/234.5)*t_c)/(257.14+t_c);
-  float beta = log(rh_pc/100)+alph;
-  float a    = 2.0/234.5;                              
-  float b    = 18.678-beta;                     
-  float c    =-257.14*beta;                     
-  
-  float tdp_c  = 1/a*(b-sqrt(pow(b,2)+2*a*c));
-  return(tdp_c);
-}
-
-
-float calcFrostPoint(float t_c, float tdp_c) {                                // °C Frost point temperature estimation from: https://gist.github.com/sourceperl/45587ea99ff123745428
-    float tdp_k  = tdp_c + C2K;                                               //                                             https://weather.station.software/blog/what-are-dew-and-frost-points/
-    float t_k    = t_c   + C2K;  
-    float t_fp_k = tdp_k - t_k + 2671.02 / ((2954.61 / t_k) + 2.193665 * log(t_k) - 13.3448);
-    float t_fp_c = min(t_fp_k - C2K, 0.0);
-    return(t_fp_c);
 }
 
 
@@ -179,4 +157,5 @@ float calcFrostPoint(float T_K, float Tdp_K) {                               // 
     float Tfp_K = Tdp_K - T_K + 2671.02 / ((2954.61 / T_K) + 2.193665 * log(T_K) - 13.3448);
     return(Tfp_K);
 }
+
 
