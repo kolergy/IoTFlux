@@ -31,5 +31,6 @@
 *.out
 *.app
 
-#PlatformIO Stufs
+#VScode and PlatformIO Stufs
 .pio
+.vscode

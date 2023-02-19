@@ -53,8 +53,9 @@ NTPClient    time_client = NTPClient(ntpUDP);
 #ifdef MQTT
 #include <PubSubClient.h>  //  by Nick O'Leary
 PubSubClient mqtt_client(wifi_client);
-
-const char* mqtt_server   = "192.168.71.206";
+// "192.168.1.196" //MQTT Artilect
+//"192.168.71.206"
+const char* mqtt_server   = "192.168.1.196";
 const int   mqtt_port     = 1883;  //1883, 12948;
 
 
@@ -128,8 +129,12 @@ void setup() {
   #ifdef WIFI
   Serial.println("Connecting to WiFi ...");
   WiFi.setHostname(HOST_NAME);
-  WiFi.begin(get_credential("wifi_ssid"), get_credential("wifi_pass"));
-  //Serial.println("SSID    : " + get_credential("wifi_ssid") + " Password: " + get_credential("wifi_pass"));
+  Serial.println("HERE");
+  const char* ssid = get_credential("wifi_ssid");
+  const char* pass = get_credential("wifi_pass");
+  Serial.printf("ssid: %s, Pass: %s", ssid, pass);
+  WiFi.begin(ssid, pass);
+  //Serial.println("SSID    : " + String(ssid) + " Password: " + String(pass));
   int n = 0;
   while (WiFi.status() != WL_CONNECTED && n < 20) {
     Serial.print(".");
@@ -319,10 +324,11 @@ bool RequestCredentials() {
       Serial.printf("Please enter %s:", my_cred[i][0]);
       my_cred[i][1] = String(getInput());
       resS          = NVS.setString(my_cred[i][0], my_cred[i][1]);
-      if(resS) Serial.printf("\n %s Updated", my_cred[i][0]);
+      if(resS) Serial.printf("\n %s Updated with:%s\n", my_cred[i][0], my_cred[i][1]);
       else     cred_ok = false;
     }
   }
+  Serial.printf("cred_ok; %s\n", cred_ok);
   return(cred_ok);
 }
 
@@ -340,17 +346,19 @@ char* getInput() {               // Get user input from Serial
       rc = Serial.read();
       if (rc != endMark && int(rc) !=13) {
         buf[ndx] = rc;
-        Serial.println(buf[ndx]);
+        Serial.printf("%c",buf[ndx]);
         ndx++;
       } else {
         buf[ndx] = '\0'; // terminate the string
         newD     = true;
+        while (Serial.available()) Serial.read();
       }
     }
   }
   Serial.println("\n:" + String(buf) + ":");
   strncpy(rtrn, buf, 255);
   return rtrn;
+  Serial.flush(); 
 }
 
 
@@ -364,11 +372,14 @@ bool getCredentialsFromNVS() {  // Get credentials from NVS memory if available 
 }
 
 const char* get_credential(String cred_name) {
+  Serial.printf("get_credential\n");
   for(int i=0;i<N_CRED;i++) {
+    Serial.printf("cred_name: %s, stores:%s\n",cred_name, my_cred[i][0]);
     if(my_cred[i][0] == cred_name) {  
       char name_ch[my_cred[i][1].length() + 1];
-      cred_name.toCharArray(name_ch, cred_name.length() + 1);
+      cred_name.toCharArray(name_ch, my_cred[i][1].length() + 1);
       const char* name_cch = name_ch;
+      Serial.printf("Return: %s\n",name_cch);
       return(name_cch);
     }
   }
