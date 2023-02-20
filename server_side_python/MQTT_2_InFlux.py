@@ -69,12 +69,3 @@ if __name__ == '__main__':
     MQTT_subscribe(mqtt_client, influx_client)
     mqtt_client.loop_forever()
 
-
-"""
-
-
-client.create_database('example')
-client.write_points(json_body)
-result = client.query('select value from cpu_load_short;')
-print("Result: {0}".format(result))
-"""
