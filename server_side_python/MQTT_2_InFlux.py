@@ -40,13 +40,12 @@ def connect_mqtt():
 
 
 def MQTT_subscribe(client: mqtt_client, influx_client):
-    def on_message(client, userdata, msg, influx_client):
+    def on_message(client, userdata, msg):
         receved_data = msg.payload.decode()
-        #print(f"Received `{receved_data}` from `{msg.topic}` topic")
-        flux_data = ESP_2_flux(receved_data)
+        flux_data    = ESP_2_flux(receved_data)
         print(flux_data)
         influx_client.write_points(flux_data)
-
+    client.influx_client = influx_client
     client.subscribe(conf['MQTT']['topic'])
     client.on_message = on_message
 
@@ -54,7 +53,7 @@ def MQTT_subscribe(client: mqtt_client, influx_client):
 def connect_influx():
     print("toto")
     client  = InfluxDBClient(host=conf['InFlux']['host'], port=conf['InFlux']['port'], username=conf['InFlux']['user'], \
-                         password=conf['InFlux']['password'], ssl=conf['InFlux']['ssl'], verify_ssl=conf['InFlux']['verify_ssl'])
+                         password=conf['InFlux']['password']) #, ssl=conf['InFlux']['ssl'], verify_ssl=conf['InFlux']['verify_ssl']
     print("titi")
     db_list = client.get_list_database()
     print("tutu")
@@ -65,6 +64,7 @@ def connect_influx():
 if __name__ == '__main__':
     with open('server_side_python/config.json') as fp: conf = json.load(fp)
     influx_client = connect_influx()
+    #influx_client =  "None"
     mqtt_client   = connect_mqtt()
     MQTT_subscribe(mqtt_client, influx_client)
     mqtt_client.loop_forever()
