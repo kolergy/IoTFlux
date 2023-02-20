@@ -1,12 +1,16 @@
 
+# Commands to create the required environement
 """
-conda deactivate
-conda env remove -n Flux_3_11
 conda create --name Flux_3_11 python=3.11 -y
 conda activate Flux_3_11
 pip install -U paho-mqtt
 pip install -U influxdb
 
+"""
+# Commands to remove the environement
+"""
+conda deactivate
+conda env remove -n Flux_3_11
 """
 
 import random
