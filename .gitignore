@@ -34,3 +34,8 @@
 #VScode and PlatformIO Stufs
 .pio
 .vscode
+.vscode/c_cpp_properties.json
+
+# Secrets
+secrets.json
+config.json
